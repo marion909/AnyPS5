@@ -984,6 +984,7 @@ int APS5_VABI sceKernelGetdirentries(int fd, char* buf, int nbytes, int64_t* bas
         if (nameLength > GuestMaxName || written + record > static_cast<std::size_t>(nbytes)) {
             ::closedir(directory);
             if (::lseek(fd, resume, SEEK_SET) < 0) return SceErrorFromErrno(errno);
+            errno = savedErrno;
             if (written != 0) return static_cast<int>(written);
             return nameLength > GuestMaxName ? static_cast<int>(0x80020000u | GUEST_ENAMETOOLONG) : SceErrorFromErrno(GUEST_EINVAL);
         }

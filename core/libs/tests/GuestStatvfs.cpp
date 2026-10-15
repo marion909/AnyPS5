@@ -33,7 +33,9 @@ static void RequireVolume(const char* path, const std::filesystem::path& native)
     std::array<std::uint64_t, 13> output;
     output.fill(0xA5A5A5A5A5A5A5A5ull);
     *__error_nid_postfix() = 12345;
-    Require(statvfs_nid_postfix(path, output.data() + 1) == 0);
+    const int status = statvfs_nid_postfix(path, output.data() + 1);
+    if (status != 0) std::fprintf(stderr, "path %s: statvfs failed with errno %d\n", path, *__error_nid_postfix());
+    Require(status == 0);
     Require(*__error_nid_postfix() == 12345);
     Require(output.front() == 0xA5A5A5A5A5A5A5A5ull && output.back() == output.front());
     const auto* fields = output.data() + 1;
