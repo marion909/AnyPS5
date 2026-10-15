@@ -1199,7 +1199,7 @@ VulkanDevice::VulkanDevice(const PresentationWindow* window, bool compileOnly) :
     if (hasExtension("VK_KHR_portability_subset")) {
         deviceExtensions.push_back("VK_KHR_portability_subset");
         state->portabilitySubset = true;
-        APS5_LOG_OUT("Portability subset device: VK_KHR_portability_subset enabled");
+        APS5_LOG_OUT("Portability subset device: %s enabled", "VK_KHR_portability_subset");
     }
     if (window != nullptr && hasExtension(VK_EXT_HDR_METADATA_EXTENSION_NAME)) {
         deviceExtensions.push_back(VK_EXT_HDR_METADATA_EXTENSION_NAME);
