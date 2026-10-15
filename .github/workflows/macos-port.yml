@@ -9,6 +9,9 @@ concurrency:
   group: macos-port-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: macos-15
@@ -59,3 +62,18 @@ jobs:
         with:
           name: macos-logs
           path: logs/
+      - name: Publish logs to the ci-logs branch
+        if: always()
+        run: |
+          set -e
+          cp -R logs "$RUNNER_TEMP/logs"
+          git config user.name "macos-ci"
+          git config user.email "macos-ci@users.noreply.github.com"
+          git checkout --orphan ci-logs-publish
+          git rm -rq --cached . || true
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R "$RUNNER_TEMP/logs/." .
+          echo "${{ github.sha }}" > COMMIT
+          git add -A
+          git commit -qm "logs for ${{ github.sha }}"
+          git push -f origin HEAD:ci-logs
