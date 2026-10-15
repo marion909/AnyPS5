@@ -1156,7 +1156,15 @@ VulkanDevice::VulkanDevice(const PresentationWindow* window, bool compileOnly) :
             VkPhysicalDeviceDriverProperties driver{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES};
             VkPhysicalDeviceProperties2 driverProperties{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2, &driver};
             state->InstanceFunction<PFN_vkGetPhysicalDeviceProperties2>("vkGetPhysicalDeviceProperties2")(selected, &driverProperties);
-            state->fragmentShaderBarycentric = FragmentShaderBarycentricUsable(driver.driverID, state->fragmentShaderBarycentric);
+            const bool reported = state->fragmentShaderBarycentric;
+            state->fragmentShaderBarycentric = FragmentShaderBarycentricUsable(driver.driverID, reported);
+#if defined(__APPLE__)
+            const char* allowed = std::getenv("ANYPS5_MOLTENVK_BARYCENTRIC");
+            if (reported && driver.driverID == VK_DRIVER_ID_MOLTENVK && (allowed == nullptr || std::strcmp(allowed, "0") != 0)) {
+                state->fragmentShaderBarycentric = true;
+                std::fprintf(stderr, "[gpu] MoltenVK: using VK_KHR_fragment_shader_barycentric, as Metal has no geometry shaders for the fallback (ANYPS5_MOLTENVK_BARYCENTRIC=0 disables it)\n");
+            }
+#endif
         }
     }
     VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT interlockFeatures{VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_INTERLOCK_FEATURES_EXT};
