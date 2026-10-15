@@ -15,7 +15,7 @@ permissions:
 jobs:
   build:
     runs-on: macos-15
-    timeout-minutes: 120
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
         with:
@@ -57,6 +57,18 @@ jobs:
           cat ../logs/smoke-import.log ../logs/smoke-tls.log
           echo "import exit=$importStatus tls exit=$tlsStatus"
           grep -q "hello from a PS5 ELF on macOS" ../logs/smoke-import.log && [ $importStatus -eq 0 ] && [ $tlsStatus -eq 136 ]
+      - name: Run the test suite
+        if: always()
+        continue-on-error: true
+        run: |
+          set +e
+          cmake -S . -B build -DBUILD_TESTING=ON > logs/tests-configure.log 2>&1
+          cmake --build build --parallel -- -k 0 > logs/tests-build.log 2>&1
+          echo "build exit=$?" >> logs/tests-build.log
+          grep -E 'error:|FAILED:' logs/tests-build.log | head -100
+          ctest --test-dir build --output-on-failure --timeout 120 -j 4 > logs/tests.log 2>&1
+          echo "ctest exit=$?" >> logs/tests.log
+          tail -60 logs/tests.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
