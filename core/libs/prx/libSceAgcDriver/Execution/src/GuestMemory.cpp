@@ -37,6 +37,7 @@
 #include <pthread.h>
 #include <sstream>
 #include <sys/ioctl.h>
+#include <sys/mman.h>
 #include <unistd.h>
 #include "prx/libc/include/specifics/linux/HostMapping.hpp"
 #endif
@@ -581,9 +582,12 @@ bool describePages(std::uintptr_t address, std::size_t bytes, Emit&& emit) {
             continue;
         }
         {
-            const bool readable = region.readable;
-            const bool writable = readable && region.writable;
-            const auto next = std::min<std::uintptr_t>(end, region.end);
+            const auto regionNext = std::min<std::uintptr_t>(end, region.end);
+            std::uintptr_t watchedEnd = regionNext;
+            const int watched = GuestWriteWatch::GuestWriteWatchProtection_nid_postfix(cursor, regionNext, &watchedEnd);
+            const bool readable = watched >= 0 ? (watched & PROT_READ) != 0 : region.readable;
+            const bool writable = readable && (watched >= 0 ? (watched & PROT_WRITE) != 0 : region.writable);
+            const auto next = std::max<std::uintptr_t>(cursor + 1, std::min<std::uintptr_t>(regionNext, watchedEnd));
             recordRun(next, readable, writable);
             if (!emit(PageRun{cursor, next, readable, writable})) return true;
             cursor = next;

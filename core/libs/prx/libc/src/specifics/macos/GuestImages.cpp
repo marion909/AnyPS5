@@ -9,6 +9,7 @@
 #include <memory>
 #include <mutex>
 #include <string>
+#include <vector>
 
 namespace {
 
@@ -16,6 +17,34 @@ constexpr std::uint64_t MetaVersion = 2;
 constexpr std::size_t LoadBiasOffset = 0x08;
 constexpr std::size_t HeaderCountOffset = 0x58;
 constexpr std::size_t HeadersOffset = 0x60;
+
+const std::vector<Elf64_Phdr>& SegmentHeaders(const mach_header_64* header) {
+    static std::mutex lock;
+    static auto* cache = new std::map<const mach_header_64*, std::vector<Elf64_Phdr>>();
+    std::lock_guard guard(lock);
+    auto [found, added] = cache->try_emplace(header);
+    if (!added) return found->second;
+    const auto* command = reinterpret_cast<const load_command*>(header + 1);
+    for (std::uint32_t index = 0; index < header->ncmds; ++index) {
+        if (command->cmd == LC_SEGMENT_64) {
+            const auto* segment = reinterpret_cast<const segment_command_64*>(command);
+            if (segment->vmsize != 0 && segment->initprot != 0) {
+                Elf64_Phdr phdr{};
+                phdr.p_type = PT_LOAD;
+                phdr.p_flags = ((segment->initprot & VM_PROT_READ) ? PF_R : 0u) | ((segment->initprot & VM_PROT_WRITE) ? PF_W : 0u) | ((segment->initprot & VM_PROT_EXECUTE) ? PF_X : 0u);
+                phdr.p_offset = segment->fileoff;
+                phdr.p_vaddr = segment->vmaddr;
+                phdr.p_paddr = segment->vmaddr;
+                phdr.p_filesz = segment->filesize;
+                phdr.p_memsz = segment->vmsize;
+                phdr.p_align = 0x4000;
+                found->second.push_back(phdr);
+            }
+        }
+        command = reinterpret_cast<const load_command*>(reinterpret_cast<const std::uint8_t*>(command) + command->cmdsize);
+    }
+    return found->second;
+}
 
 }
 
@@ -25,6 +54,17 @@ extern "C" int dl_iterate_phdr(int (*callback)(dl_phdr_info*, std::size_t, void*
         if (header == nullptr || header->magic != MH_MAGIC_64 || (header->flags & MH_DYLIB_IN_CACHE) != 0) continue;
         unsigned long size = 0;
         const auto* meta = getsectiondata(header, "__APS5DATA", "__meta", &size);
+        if ((meta == nullptr || size < HeadersOffset) && header->filetype == MH_EXECUTE) {
+            const auto& headers = SegmentHeaders(header);
+            if (headers.empty()) continue;
+            dl_phdr_info info {};
+            info.dlpi_addr = static_cast<std::uintptr_t>(_dyld_get_image_vmaddr_slide(index));
+            info.dlpi_name = "";
+            info.dlpi_phdr = headers.data();
+            info.dlpi_phnum = static_cast<std::uint16_t>(headers.size());
+            if (const int result = callback(&info, sizeof(info), data); result != 0) return result;
+            continue;
+        }
         if (meta == nullptr || size < HeadersOffset) continue;
         std::uint64_t version;
         std::uint64_t loadBias;

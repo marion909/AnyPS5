@@ -975,6 +975,7 @@ int APS5_VABI sceKernelGetdirentries(int fd, char* buf, int nbytes, int64_t* bas
     std::size_t written = 0;
     off_t index = 0;
     off_t resume = base;
+    const int savedErrno = errno;
     errno = 0;
     for (const struct dirent* entry; (entry = ::readdir(directory)) != nullptr; ++index) {
         if (index < base) continue;
@@ -1003,6 +1004,7 @@ int APS5_VABI sceKernelGetdirentries(int fd, char* buf, int nbytes, int64_t* bas
     ::closedir(directory);
     if (listError != 0) return SceErrorFromErrno(listError);
     if (::lseek(fd, resume, SEEK_SET) < 0) return SceErrorFromErrno(errno);
+    errno = savedErrno;
     return static_cast<int>(written);
 #else
     std::vector<char> host(static_cast<std::size_t>(nbytes) < 4096 ? 4096 : static_cast<std::size_t>(nbytes));
@@ -1203,6 +1205,9 @@ int64_t APS5_VABI sceKernelReadv(int d, const KernelIovec* iov, int iovcnt) {
         return result < 0 ? SceKernelError(*__error_nid_postfix()) : result;
     }
     if (File::IsRandomDevice(d)) return ReadRandomIovecs(d, iov, iovcnt);
+#if defined(__APPLE__)
+    if (iovcnt == 0) return 0;
+#endif
     const auto result = static_cast<std::int64_t>(::readv(d, NativeIovecs(iov), iovcnt));
     return result < 0 ? SceErrorFromErrno(errno) : result;
 }
@@ -1215,6 +1220,9 @@ int64_t APS5_VABI sceKernelWritev(int d, const KernelIovec* iov, int iovcnt) {
     }
     const auto sharedResult = File::WritevSharedMemory_nid_no_patch(d, NativeIovecs(iov), iovcnt);
     if (sharedResult != -2) return sharedResult < 0 ? SceErrorFromErrno(errno) : sharedResult;
+#if defined(__APPLE__)
+    if (iovcnt == 0) return 0;
+#endif
     const auto result = static_cast<std::int64_t>(::writev(d, NativeIovecs(iov), iovcnt));
     return result < 0 ? SceErrorFromErrno(errno) : result;
 }
