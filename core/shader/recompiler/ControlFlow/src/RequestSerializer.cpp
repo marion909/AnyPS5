@@ -642,6 +642,7 @@ void writeSpirvTarget(Writer& writer, const SpirvTarget& target) {
         writer.WriteString(extension);
     }
     writer.WriteBool(target.fragmentShaderBarycentricEnabled);
+    writer.WriteBool(target.fragmentBarycentricCoordinatesOnly);
     for (const std::uint32_t value : target.maxWorkgroupSize) {
         writer.WriteU32(value);
     }
@@ -675,6 +676,7 @@ SpirvTarget readSpirvTarget(Reader& reader, DeserializedRequest& result) {
     }
     target.supportedExtensions = result.supportedExtensions;
     target.fragmentShaderBarycentricEnabled = reader.ReadBool();
+    target.fragmentBarycentricCoordinatesOnly = reader.ReadBool();
     for (std::uint32_t& value : target.maxWorkgroupSize) {
         value = reader.ReadU32();
     }

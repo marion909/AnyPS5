@@ -191,6 +191,7 @@ void DefineInputs(SpirvEmitterState& state) {
     }
     const bool pixelStage = state.program.Resources().stage == IrShaderStage::Pixel;
     const bool emulated = pixelStage && state.program.Metadata().barycentricEmulation;
+    const bool reconstructed = pixelStage && state.program.Metadata().perVertexReconstruction;
     BarycentricEmulationLayout emulation;
     if (emulated) {
         const auto parameters = DescribeFragmentParameters(state.program, state.inputInfo);
@@ -212,6 +213,18 @@ void DefineInputs(SpirvEmitterState& state) {
                 input.variableId = shared->variableId;
                 continue;
             }
+        }
+        if (reconstructed && input.kind == StageInputKind::Parameter && input.perVertex) {
+            const auto vec4 = TypeF32Vector(state, 4u);
+            const auto array = state.module.Type(spv::OpTypeArray, vec4, ConstantU32(state, 3u));
+            input.variableId = state.module.DefineGlobalVariable(TypePointer(state, spv::StorageClassPrivate, array), spv::StorageClassPrivate);
+            state.module.AddName(input.variableId, input.debugName.c_str());
+            if (state.spirvVersion >= 0x00010400u) state.interfaceVariables.push_back(input.variableId);
+            const auto plane = DefineInterfaceVariable(state, vec4, spv::StorageClassInput, "perVertexPlane");
+            state.module.AddAnnotation(spv::OpDecorate, plane, spv::DecorationLocation, PixelParameterLocation(state, input.location));
+            state.module.AddAnnotation(spv::OpDecorate, plane, PixelParameterIsFlat(state, input.location) ? spv::DecorationFlat : spv::DecorationNoPerspective);
+            state.perVertexPlanes.emplace_back(input.variableId, plane);
+            continue;
         }
         std::uint32_t type = TypeU32(state);
         switch (input.kind) {
@@ -288,6 +301,13 @@ void DefineInputs(SpirvEmitterState& state) {
             state.module.AddAnnotation(spv::OpDecorate, input.variableId, spv::DecorationLocation, linear ? emulation.linearLocation : emulation.smoothLocation);
         } else if (const auto builtin = BuiltInForInput(input.kind); builtin != NoBuiltIn) {
             state.module.AddAnnotation(spv::OpDecorate, input.variableId, spv::DecorationBuiltIn, builtin);
+        }
+    }
+    if (!state.perVertexPlanes.empty()) {
+        state.perVertexPlaneBarycentric = InputVariableForKind(state, StageInputKind::BaryCoordNoPerspective);
+        if (state.perVertexPlaneBarycentric == 0u) {
+            state.perVertexPlaneBarycentric = DefineInterfaceVariable(state, TypeF32Vector(state, 3u), spv::StorageClassInput, "gl_BaryCoordNoPerspEXT");
+            state.module.AddAnnotation(spv::OpDecorate, state.perVertexPlaneBarycentric, spv::DecorationBuiltIn, spv::BuiltInBaryCoordNoPerspKHR);
         }
     }
     if (state.requirements.subgroupLocalInvocationId) {
