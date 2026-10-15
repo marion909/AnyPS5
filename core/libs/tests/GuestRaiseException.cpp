@@ -105,9 +105,14 @@ struct SpinState {
 static_assert(offsetof(SpinState, r12) == 8 && offsetof(SpinState, xmm8) == 16 && offsetof(SpinState, mxcsr) == 24);
 
 extern "C" void APS5_VABI RaiseTestSpinUntilR12(SpinState* state);
+#if defined(__APPLE__)
+#define RAISE_TEST_SPIN_SYMBOL "_RaiseTestSpinUntilR12"
+#else
+#define RAISE_TEST_SPIN_SYMBOL "RaiseTestSpinUntilR12"
+#endif
 asm(".text\n"
-    ".globl RaiseTestSpinUntilR12\n"
-    "RaiseTestSpinUntilR12:\n"
+    ".globl " RAISE_TEST_SPIN_SYMBOL "\n"
+    RAISE_TEST_SPIN_SYMBOL ":\n"
     "    pushq %r12\n"
     "    pushq %r13\n"
     "    subq $8, %rsp\n"
