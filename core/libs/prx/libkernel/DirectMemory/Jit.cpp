@@ -142,7 +142,7 @@ int DuplicateDescriptor(int descriptor) {
 #else
 int CreateBacking(std::size_t bytes, int* descriptor, std::shared_ptr<JitObject>* object) {
 #if defined(__APPLE__)
-    const int file = PosixMemory::CreateAnonymousFile("anyps5 jit shared memory");
+    const int file = PosixMemory::CreateResizableFile("anyps5 jit shared memory");
 #else
     const int file = memfd_create("anyps5 jit shared memory", MFD_CLOEXEC);
 #endif

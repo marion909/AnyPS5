@@ -14,6 +14,7 @@
 #include <atomic>
 #include <cstdio>
 #include <fcntl.h>
+#include <cstdlib>
 #include <unistd.h>
 #include "prx/libc/include/specifics/macos/HostRegions.hpp"
 #else
@@ -56,6 +57,22 @@ inline int CreateAnonymousFile(const char* name) {
     return -1;
 #else
     return ::memfd_create(name, MFD_CLOEXEC | MFD_ALLOW_SEALING);
+#endif
+}
+
+inline int CreateResizableFile(const char* name) {
+#if defined(__APPLE__)
+    static_cast<void>(name);
+    const char* directory = ::getenv("TMPDIR");
+    char path[1024];
+    std::snprintf(path, sizeof(path), "%s/aps5.XXXXXX", directory != nullptr && *directory != '\0' ? directory : "/tmp");
+    const int file = ::mkstemp(path);
+    if (file < 0) return -1;
+    ::unlink(path);
+    ::fcntl(file, F_SETFD, FD_CLOEXEC);
+    return file;
+#else
+    return CreateAnonymousFile(name);
 #endif
 }
 

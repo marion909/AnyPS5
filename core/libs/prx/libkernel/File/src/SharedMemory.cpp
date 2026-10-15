@@ -211,7 +211,7 @@ int CreateAnonymousFile() {
     return -1;
 #else
 #if defined(__APPLE__)
-    const int descriptor = PosixMemory::CreateAnonymousFile("anyps5 shm_open");
+    const int descriptor = PosixMemory::CreateResizableFile("anyps5 shm_open");
 #else
     const int descriptor = memfd_create("anyps5 shm_open", MFD_CLOEXEC);
 #endif

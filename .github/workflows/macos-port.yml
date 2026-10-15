@@ -69,6 +69,10 @@ jobs:
           ctest --test-dir build --output-on-failure --timeout 120 -j 4 > logs/tests.log 2>&1
           echo "ctest exit=$?" >> logs/tests.log
           tail -60 logs/tests.log
+          ctest --test-dir build --rerun-failed --output-on-failure --timeout 120 -j 1 > logs/tests-failed.log 2>&1
+          ls -t ~/Library/Logs/DiagnosticReports 2>/dev/null | head -40 > logs/crash-reports.txt
+          mkdir -p logs/crashes
+          for report in $(ls -t ~/Library/Logs/DiagnosticReports/*.ips 2>/dev/null | head -15); do head -c 20000 "$report" > "logs/crashes/$(basename "$report").txt"; done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
