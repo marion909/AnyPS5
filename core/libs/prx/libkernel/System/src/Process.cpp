@@ -1,9 +1,11 @@
+#if defined(__APPLE__)
+#include <crt_externs.h>
+#include <mach/mach.h>
+#include <pthread.h>
+#endif
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX
-#endif
-#if defined(__APPLE__)
-#include <crt_externs.h>
 #endif
 #include <windows.h>
 #include <shellapi.h>
@@ -510,7 +512,23 @@ int APS5_VABI getrusage_nid_postfix(int who, GuestResourceUsage* usage) {
     usage->ru_nivcsw = 0;
 #else
     struct rusage native{};
+#if defined(__APPLE__)
+    if (who != 0) {
+        thread_basic_info_data_t thread{};
+        mach_msg_type_number_t count = THREAD_BASIC_INFO_COUNT;
+        const mach_port_t self = pthread_mach_thread_np(pthread_self());
+        if (thread_info(self, THREAD_BASIC_INFO, reinterpret_cast<thread_info_t>(&thread), &count) != KERN_SUCCESS)
+            throw std::runtime_error("getrusage: thread_info failed");
+        if (::getrusage(RUSAGE_SELF, &native) != 0)
+            throw std::system_error(errno, std::generic_category(), "getrusage: getrusage failed");
+        native.ru_utime.tv_sec = thread.user_time.seconds;
+        native.ru_utime.tv_usec = thread.user_time.microseconds;
+        native.ru_stime.tv_sec = thread.system_time.seconds;
+        native.ru_stime.tv_usec = thread.system_time.microseconds;
+    } else if (::getrusage(RUSAGE_SELF, &native) != 0)
+#else
     if (::getrusage(who == 0 ? RUSAGE_SELF : RUSAGE_THREAD, &native) != 0)
+#endif
         throw std::system_error(errno, std::generic_category(), "getrusage: getrusage failed");
     usage->ru_utime.tv_sec = static_cast<std::int64_t>(native.ru_utime.tv_sec);
     usage->ru_utime.tv_usec = static_cast<std::int64_t>(native.ru_utime.tv_usec);

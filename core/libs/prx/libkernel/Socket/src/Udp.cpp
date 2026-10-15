@@ -47,6 +47,9 @@
 #if defined(__APPLE__) && !defined(MSG_NOSIGNAL)
 #define MSG_NOSIGNAL 0
 #endif
+#if defined(__APPLE__) && !defined(POLLRDHUP)
+#define POLLRDHUP 0
+#endif
 
 extern "C" int* APS5_VABI __error_nid_postfix();
 namespace {

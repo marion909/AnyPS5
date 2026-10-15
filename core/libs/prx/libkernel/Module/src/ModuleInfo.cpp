@@ -25,7 +25,11 @@
 #include <filesystem>
 #else
 #include <dlfcn.h>
+#if defined(__APPLE__)
+#include "prx/libc/include/specifics/linux/ElfTypes.hpp"
+#else
 #include <link.h>
+#endif
 #include <mutex>
 #include <unistd.h>
 #include <unordered_map>

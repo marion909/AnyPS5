@@ -1,3 +1,7 @@
+#if defined(__APPLE__)
+#include <mach/mach.h>
+#include <pthread.h>
+#endif
 #include "../include/Pthread.hpp"
 #include "../include/ThreadLifecycle.hpp"
 #include "../include/WindowsThreadLocal.hpp"
@@ -331,7 +335,7 @@ PthreadPrivate::~PthreadPrivate() {
 }
 
 static void BindHostCpuClock(PthreadPrivate* self) {
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__APPLE__)
     (void)self;
 #else
     clockid_t clock{};
@@ -413,6 +417,16 @@ bool GuestThreadCpuNanos(int cpuClockThread, std::uint64_t* nanos) {
         return (static_cast<std::uint64_t>(time.dwHighDateTime) << 32) | time.dwLowDateTime;
     };
     *nanos = (toTicks(user) + toTicks(kernel)) * 100ULL;
+#elif defined(__APPLE__)
+    thread_basic_info_data_t info{};
+    mach_msg_type_number_t count = THREAD_BASIC_INFO_COUNT;
+    const mach_port_t port = pthread_mach_thread_np(thread->hostThread);
+    if (port == MACH_PORT_NULL || thread_info(port, THREAD_BASIC_INFO, reinterpret_cast<thread_info_t>(&info), &count) != KERN_SUCCESS) {
+        *nanos = 0;
+        return true;
+    }
+    const auto toNanos = [](const time_value_t& value) { return static_cast<std::uint64_t>(value.seconds) * 1000000000ULL + static_cast<std::uint64_t>(value.microseconds) * 1000ULL; };
+    *nanos = toNanos(info.user_time) + toNanos(info.system_time);
 #else
     if (!thread->hostCpuClockBound) {
         *nanos = 0;

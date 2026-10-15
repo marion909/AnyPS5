@@ -99,7 +99,7 @@ inline std::optional<Mapping> Find(std::uint64_t address, const char* caller) {
     char name[PROC_PIDPATHINFO_MAXSIZE] = {};
     const int length = proc_regionfilename(getpid(), address, name, sizeof(name));
     return Mapping{region.begin, region.end, length > 0 ? std::string(name, static_cast<std::size_t>(length)) : std::string()};
-#endif
+#else
     const int fd = QueryFd();
     if (fd < 0) return ScanMaps(address, caller);
     char name[4096] = {};
@@ -113,6 +113,7 @@ inline std::optional<Mapping> Find(std::uint64_t address, const char* caller) {
         throw std::runtime_error(std::string(caller) + ": PROCMAP_QUERY failed");
     }
     return Mapping{query.vma_start, query.vma_end, query.vma_name_size != 0 ? name : ""};
+#endif
 }
 
 }
