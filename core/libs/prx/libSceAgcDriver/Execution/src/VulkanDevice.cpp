@@ -3502,7 +3502,7 @@ Graphics::Context VulkanDevice::buildContext() const {
         state->depthRangeUnrestricted,
         true,
         state->subgroup,
-        state->fragmentShaderBarycentric,
+        state->fragmentShaderBarycentric || state->fragmentBarycentricCoordinatesOnly,
         state->samplerAnisotropy,
         state->textureCompressionBC,
         state->detiler.get(),
