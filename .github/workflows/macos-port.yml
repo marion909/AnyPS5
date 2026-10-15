@@ -1,0 +1,61 @@
+name: macOS port
+
+on:
+  push:
+    branches: [macos-port]
+  workflow_dispatch:
+
+concurrency:
+  group: macos-port-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Rosetta and tools
+        run: |
+          /usr/bin/arch -x86_64 /usr/bin/true || softwareupdate --install-rosetta --agree-to-license
+          brew list ninja >/dev/null 2>&1 || brew install ninja
+          mkdir -p logs
+      - name: Build the relinker
+        run: |
+          cmake -S . -B build-relinker -G Ninja -DCMAKE_BUILD_TYPE=Release -DANYPS5_RELINKER_ONLY=ON > logs/relinker-configure.log 2>&1
+          cmake --build build-relinker --parallel > logs/relinker-build.log 2>&1 || { tail -80 logs/relinker-build.log; exit 1; }
+      - name: Configure the full build
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release > logs/configure.log 2>&1 || { tail -80 logs/configure.log; exit 1; }
+      - name: Build the system libraries
+        run: |
+          set +e
+          cmake --build build --target libs --parallel -- -k 0 > logs/libs.log 2>&1
+          status=$?
+          grep -E 'error:|FAILED:' logs/libs.log | head -200
+          exit $status
+      - name: Smoke test guest start, imports and TLS under Rosetta
+        run: |
+          set -e
+          mkdir -p smoke && cd smoke
+          python3 ../core/relinker/relinker/tests/macos/import_fixture.py import.elf
+          python3 ../core/relinker/relinker/tests/macos/tls_fixture.py tls.elf
+          for name in import tls; do
+            mkdir -p $name
+            ../build-relinker/core/relinker/relinker --macos --skip-sce-module $name.elf $name/app
+            ln -sf "$PWD/../build/core/libs/libs" $name/libs
+          done
+          set +e
+          (cd import && /usr/bin/arch -x86_64 ./app) > ../logs/smoke-import.log 2>&1
+          importStatus=$?
+          (cd tls && /usr/bin/arch -x86_64 ./app) > ../logs/smoke-tls.log 2>&1
+          tlsStatus=$?
+          cat ../logs/smoke-import.log ../logs/smoke-tls.log
+          echo "import exit=$importStatus tls exit=$tlsStatus"
+          grep -q "hello from a PS5 ELF on macOS" ../logs/smoke-import.log && [ $importStatus -eq 0 ] && [ $tlsStatus -eq 136 ]
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-logs
+          path: logs/
