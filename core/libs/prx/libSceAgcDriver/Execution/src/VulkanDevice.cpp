@@ -1160,9 +1160,9 @@ VulkanDevice::VulkanDevice(const PresentationWindow* window, bool compileOnly) :
             state->fragmentShaderBarycentric = FragmentShaderBarycentricUsable(driver.driverID, reported);
 #if defined(__APPLE__)
             const char* allowed = std::getenv("ANYPS5_MOLTENVK_BARYCENTRIC");
-            if (reported && driver.driverID == VK_DRIVER_ID_MOLTENVK && (allowed == nullptr || std::strcmp(allowed, "0") != 0)) {
+            if (reported && driver.driverID == VK_DRIVER_ID_MOLTENVK && allowed != nullptr && std::strcmp(allowed, "1") == 0) {
                 state->fragmentShaderBarycentric = true;
-                std::fprintf(stderr, "[gpu] MoltenVK: using VK_KHR_fragment_shader_barycentric, as Metal has no geometry shaders for the fallback (ANYPS5_MOLTENVK_BARYCENTRIC=0 disables it)\n");
+                std::fprintf(stderr, "[gpu] MoltenVK: VK_KHR_fragment_shader_barycentric forced on by ANYPS5_MOLTENVK_BARYCENTRIC=1; per-vertex inputs fail to translate to MSL\n");
             }
 #endif
         }
