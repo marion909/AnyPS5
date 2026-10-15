@@ -1,3 +1,4 @@
+#include "prx/libc/include/specifics/macos/HostRegions.hpp"
 #include <cstdint>
 #include <cstddef>
 #include <cstring>
@@ -341,6 +342,13 @@ int APS5_VABI sceKernelVirtualQuery(const void* addr, int flags, VirtualQueryInf
  info->end = info->start + host.RegionSize;
  const bool writable = (host.Protect & (PAGE_READWRITE | PAGE_EXECUTE_READWRITE | PAGE_WRITECOPY | PAGE_EXECUTE_WRITECOPY)) != 0;
  const bool executable = (host.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY)) != 0;
+ #elif defined(__APPLE__)
+ HostRegions::Region host;
+ if (!HostRegions::Containing(address, host) || !host.readable) return SCE_KERNEL_ERROR_EACCES;
+ info->start = host.begin;
+ info->end = host.end;
+ const bool writable = host.writable;
+ const bool executable = host.executable;
  #else
  std::ifstream maps("/proc/self/maps");
  std::string line;

@@ -2,6 +2,9 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#if defined(__APPLE__)
+#include <crt_externs.h>
+#endif
 #include <windows.h>
 #include <shellapi.h>
 #include <tlhelp32.h>
@@ -87,6 +90,13 @@ public:
             arguments.erase(arguments.begin());
             if (_wputenv_s(L"ANYPS5_LOADEXEC_ARGV_SKIP", L"") != 0 || !SetEnvironmentVariableW(L"ANYPS5_LOADEXEC_ARGV_SKIP", nullptr))
                 throw std::runtime_error("LoadExec: cannot clear the argument marker");
+        }
+#elif defined(__APPLE__)
+        const int count = *_NSGetArgc();
+        char** values = *_NSGetArgv();
+        for (int index = 0; index < count; ++index) {
+            if (values[index] == nullptr) throw std::runtime_error("Invalid process argument");
+            arguments.emplace_back(values[index]);
         }
 #else
         std::ifstream stream("/proc/self/cmdline", std::ios::binary);
@@ -382,6 +392,8 @@ int APS5_VABI sceKernelGetCurrentCpu(void) {
             throw std::system_error(GetLastError(), std::system_category(), "Reading processor group size");
         index += count;
     }
+#elif defined(__APPLE__)
+    const unsigned index = 0;
 #else
     const int cpu = ::sched_getcpu();
     if (cpu < 0)

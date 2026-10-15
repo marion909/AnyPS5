@@ -568,6 +568,28 @@ bool describePages(std::uintptr_t address, std::size_t bytes, Emit&& emit) {
             constexpr auto mask = static_cast<std::uintptr_t>(PageBytes - 1);
             pages.record(cursor & ~mask, (next + mask) & ~mask, readable, writable, generation);
         };
+#if defined(__APPLE__)
+        HostRegions::Region region;
+        if (!HostRegions::FirstAtOrAbove(cursor, region) || region.end <= cursor) {
+            static_cast<void>(emit(PageRun{cursor, end, false, false}));
+            return true;
+        }
+        if (region.begin > cursor) {
+            const auto gapEnd = std::min<std::uintptr_t>(end, region.begin);
+            if (!emit(PageRun{cursor, gapEnd, false, false})) return true;
+            cursor = gapEnd;
+            continue;
+        }
+        {
+            const bool readable = region.readable;
+            const bool writable = readable && region.writable;
+            const auto next = std::min<std::uintptr_t>(end, region.end);
+            recordRun(next, readable, writable);
+            if (!emit(PageRun{cursor, next, readable, writable})) return true;
+            cursor = next;
+            continue;
+        }
+#endif
         if (const int fd = HostMapping::QueryFd(); fd >= 0) {
             procmap_query query{};
             query.size = sizeof(query);
@@ -644,6 +666,10 @@ bool onOwnLiveStack(std::uintptr_t address, std::size_t bytes) {
             low = static_cast<std::uintptr_t>(lowLimit);
             high = static_cast<std::uintptr_t>(highLimit);
 #else
+#if defined(__APPLE__)
+            high = reinterpret_cast<std::uintptr_t>(pthread_get_stackaddr_np(pthread_self()));
+            low = high - pthread_get_stacksize_np(pthread_self());
+#else
             pthread_attr_t attributes;
             if (pthread_getattr_np(pthread_self(), &attributes) != 0) return;
             void* base = nullptr;
@@ -653,6 +679,7 @@ bool onOwnLiveStack(std::uintptr_t address, std::size_t bytes) {
                 high = low + size;
             }
             pthread_attr_destroy(&attributes);
+#endif
 #endif
         }
     };

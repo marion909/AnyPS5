@@ -383,6 +383,8 @@ struct VulkanDevice::State {
     VkFormat surfaceFormat = VK_FORMAT_B8G8R8A8_UNORM;
     VkColorSpaceKHR surfaceColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
     bool swapchainColorSpaces = false;
+    bool portabilityEnumeration = false;
+    bool portabilitySubset = false;
     bool hdrMetadata = false;
     std::vector<VkSurfaceFormatKHR> surfaceFormats;
     std::uint64_t surfaceDisplayGeneration = 0;
@@ -935,6 +937,21 @@ VulkanDevice::VulkanDevice(const PresentationWindow* window, bool compileOnly) :
     APS5_LOG_OUT("VulkanDevice constructor window=%p", static_cast<const void*>(window));
 #ifdef _WIN32
     state->library = SDL_LoadObject("vulkan-1.dll");
+#elif defined(__APPLE__)
+    std::string attempted;
+    if (const char* overridden = std::getenv("ANYPS5_VULKAN_LIBRARY"); overridden != nullptr && *overridden != '\0') {
+        state->library = SDL_LoadObject(overridden);
+        attempted = std::string(overridden) + ": " + SDL_GetError();
+    } else {
+        for (const char* candidate : {"libvulkan.1.dylib", "libvulkan.dylib", "vulkan.framework/vulkan", "libMoltenVK.dylib", "MoltenVK.framework/MoltenVK"}) {
+            state->library = SDL_LoadObject(candidate);
+            if (state->library != nullptr) break;
+            attempted += std::string(attempted.empty() ? "" : "; ") + candidate + ": " + SDL_GetError();
+        }
+    }
+    if (state->library == nullptr) {
+        throw std::runtime_error("Vulkan loader: no Vulkan library found (install the Vulkan SDK or set ANYPS5_VULKAN_LIBRARY): " + attempted);
+    }
 #else
     state->library = SDL_LoadObject("libvulkan.so.1");
 #endif
@@ -956,6 +973,17 @@ VulkanDevice::VulkanDevice(const PresentationWindow* window, bool compileOnly) :
     VkInstanceCreateInfo create{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
     create.pApplicationInfo = &application;
     std::vector<const char*> instanceExtensions;
+    {
+        std::uint32_t availableCount = 0;
+        const auto enumerateExtensions = state->InstanceFunction<PFN_vkEnumerateInstanceExtensionProperties>("vkEnumerateInstanceExtensionProperties");
+        check(enumerateExtensions(nullptr, &availableCount, nullptr), "vkEnumerateInstanceExtensionProperties");
+        std::vector<VkExtensionProperties> available(availableCount);
+        check(enumerateExtensions(nullptr, &availableCount, available.data()), "vkEnumerateInstanceExtensionProperties");
+        if (std::any_of(available.begin(), available.end(), [](const auto& item) { return std::strcmp(item.extensionName, VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME) == 0; })) {
+            state->portabilityEnumeration = true;
+            create.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+        }
+    }
     if (window != nullptr) {
         APS5_LOG_OUT("Presentation window context=%p extent=%ux%u extensions=%zu", window->context, window->width, window->height, window->extensions.size());
         require(window->context && window->createSurface && window->getDrawableSize && window->width && window->height, "invalid window descriptor");
@@ -975,9 +1003,10 @@ VulkanDevice::VulkanDevice(const PresentationWindow* window, bool compileOnly) :
             instanceExtensions.push_back(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
             state->swapchainColorSpaces = true;
         }
-        create.enabledExtensionCount = static_cast<std::uint32_t>(instanceExtensions.size());
-        create.ppEnabledExtensionNames = instanceExtensions.data();
     }
+    if (state->portabilityEnumeration) instanceExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+    create.enabledExtensionCount = static_cast<std::uint32_t>(instanceExtensions.size());
+    create.ppEnabledExtensionNames = instanceExtensions.empty() ? nullptr : instanceExtensions.data();
     check(state->InstanceFunction<PFN_vkCreateInstance>("vkCreateInstance")(&create, nullptr, &state->instance), "vkCreateInstance");
     APS5_LOG_OUT("Vulkan instance created instance=%p", reinterpret_cast<void*>(state->instance));
     if (window != nullptr) {
@@ -1167,6 +1196,11 @@ VulkanDevice::VulkanDevice(const PresentationWindow* window, bool compileOnly) :
     }
     std::vector<const char*> deviceExtensions;
     if (window != nullptr) deviceExtensions.assign(presentationExtensions.begin(), presentationExtensions.end());
+    if (hasExtension("VK_KHR_portability_subset")) {
+        deviceExtensions.push_back("VK_KHR_portability_subset");
+        state->portabilitySubset = true;
+        APS5_LOG_OUT("Portability subset device: VK_KHR_portability_subset enabled");
+    }
     if (window != nullptr && hasExtension(VK_EXT_HDR_METADATA_EXTENSION_NAME)) {
         deviceExtensions.push_back(VK_EXT_HDR_METADATA_EXTENSION_NAME);
         state->hdrMetadata = true;
