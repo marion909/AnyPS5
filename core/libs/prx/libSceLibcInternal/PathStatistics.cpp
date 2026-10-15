@@ -101,7 +101,8 @@ int OpenMetadata(const std::filesystem::path& path, bool directory) {
     return descriptor;
 #else
 #if defined(__APPLE__)
-    const int descriptor = ::open(path.c_str(), O_EVTONLY | O_CLOEXEC | (directory ? O_DIRECTORY : 0));
+    int descriptor = ::open(path.c_str(), O_EVTONLY | O_CLOEXEC | (directory ? O_DIRECTORY : 0));
+    if (descriptor < 0 && errno == EACCES) descriptor = ::open(path.c_str(), O_RDONLY | O_CLOEXEC | (directory ? O_DIRECTORY : 0));
 #else
     const int descriptor = ::open(path.c_str(), O_PATH | O_CLOEXEC | (directory ? O_DIRECTORY : 0));
 #endif
