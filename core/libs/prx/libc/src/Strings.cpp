@@ -12,26 +12,9 @@
 
 #include "prx/libc/include/General.hpp"
 #include "prx/libc/include/SonyCrt.hpp"
+#include "prx/libc/include/HostIntegerParse.hpp"
 
 namespace {
-
-template<typename TValue>
-TValue PreserveErrnoWithoutConversion(const char* text, char** end, int base, TValue (*parse)(const char*, char**, int)) {
-    const int saved = errno;
-    char* stop = nullptr;
-    const TValue value = parse(text, &stop, base);
-    if (stop == text && errno == EINVAL && (base == 0 || (base >= 2 && base <= 36))) errno = saved;
-    if (end != nullptr) *end = stop;
-    return value;
-}
-
-long long HostStrtoll(const char* text, char** end, int base) {
-    return PreserveErrnoWithoutConversion<long long>(text, end, base, std::strtoll);
-}
-
-unsigned long long HostStrtoull(const char* text, char** end, int base) {
-    return PreserveErrnoWithoutConversion<unsigned long long>(text, end, base, std::strtoull);
-}
 
 int CompareUnits(char16_t left, char16_t right) {
     return left < right ? -1 : 1;
