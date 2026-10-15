@@ -5,6 +5,10 @@
 #include <mach-o/getsect.h>
 #include <mach-o/loader.h>
 #include <cstring>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <string>
 
 namespace {
 
@@ -37,6 +41,85 @@ extern "C" int dl_iterate_phdr(int (*callback)(dl_phdr_info*, std::size_t, void*
         if (const int result = callback(&info, sizeof(info), data); result != 0) return result;
     }
     return 0;
+}
+
+namespace {
+
+struct ImageEntry {
+    const mach_header_64* header = nullptr;
+    std::uint32_t index = 0;
+};
+
+bool ImageOf(const void* base, ImageEntry& entry) {
+    for (std::uint32_t index = 0; index < _dyld_image_count(); ++index) {
+        if (_dyld_get_image_header(index) == base) {
+            entry = {reinterpret_cast<const mach_header_64*>(base), index};
+            return true;
+        }
+    }
+    return false;
+}
+
+std::uintptr_t LoadBias(const ImageEntry& entry) {
+    unsigned long size = 0;
+    const auto* meta = getsectiondata(entry.header, "__APS5DATA", "__meta", &size);
+    if (meta != nullptr && size >= HeadersOffset) {
+        std::uint64_t loadBias = 0;
+        std::memcpy(&loadBias, meta + LoadBiasOffset, sizeof(loadBias));
+        return static_cast<std::uintptr_t>(loadBias);
+    }
+    return static_cast<std::uintptr_t>(_dyld_get_image_vmaddr_slide(entry.index));
+}
+
+link_map* MapFor(const ImageEntry& entry) {
+    static std::mutex lock;
+    static auto* maps = new std::map<const mach_header_64*, std::unique_ptr<link_map>>();
+    std::lock_guard guard(lock);
+    auto& map = (*maps)[entry.header];
+    if (!map) {
+        map = std::make_unique<link_map>();
+        map->l_addr = LoadBias(entry);
+        const char* name = entry.header->filetype == MH_EXECUTE ? "" : _dyld_get_image_name(entry.index);
+        map->l_name = strdup(name != nullptr ? name : "");
+    }
+    return map.get();
+}
+
+}
+
+extern "C" int dladdr1(const void* address, Dl_info* info, void** extra, int flags) {
+    if (info == nullptr || extra == nullptr || flags != RTLD_DL_LINKMAP) return 0;
+    Dl_info found{};
+    if (dladdr(address, &found) == 0 || found.dli_fbase == nullptr) return 0;
+    ImageEntry entry;
+    if (!ImageOf(found.dli_fbase, entry)) return 0;
+    *info = found;
+    *extra = MapFor(entry);
+    return 1;
+}
+
+extern "C" int dlinfo(void* handle, int request, void* output) {
+    if (handle == nullptr || output == nullptr || request != RTLD_DI_LINKMAP) return -1;
+    void* main = dlopen(nullptr, RTLD_LAZY | RTLD_NOLOAD);
+    const bool wantsMain = main == handle;
+    if (main != nullptr) dlclose(main);
+    for (std::uint32_t index = 0; index < _dyld_image_count(); ++index) {
+        const auto* header = reinterpret_cast<const mach_header_64*>(_dyld_get_image_header(index));
+        if (header == nullptr) continue;
+        bool matches = false;
+        if (wantsMain) {
+            matches = header->filetype == MH_EXECUTE;
+        } else if (const char* name = _dyld_get_image_name(index); name != nullptr) {
+            void* opened = dlopen(name, RTLD_LAZY | RTLD_NOLOAD);
+            matches = opened == handle;
+            if (opened != nullptr) dlclose(opened);
+        }
+        if (matches) {
+            *static_cast<link_map**>(output) = MapFor({header, index});
+            return 0;
+        }
+    }
+    return -1;
 }
 
 #endif

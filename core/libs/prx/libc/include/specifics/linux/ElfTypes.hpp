@@ -48,9 +48,26 @@ struct dl_phdr_info {
 };
 
 #ifdef __APPLE__
+#include <dlfcn.h>
 #ifndef ElfW
 #define ElfW(type) Elf64_##type
 #endif
+static constexpr std::int64_t DT_NULL = 0;
+static constexpr std::int64_t DT_INIT = 12;
+static constexpr std::int64_t DT_FINI = 13;
+static constexpr int RTLD_DL_LINKMAP = 2;
+static constexpr int RTLD_DI_LINKMAP = 2;
+
+struct link_map {
+    std::uintptr_t l_addr;
+    char* l_name;
+    Elf64_Dyn* l_ld;
+    link_map* l_next;
+    link_map* l_prev;
+};
+
+extern "C" int dladdr1(const void* address, Dl_info* info, void** extra, int flags) __asm__("_dladdr1_nid_no_patch");
+extern "C" int dlinfo(void* handle, int request, void* output) __asm__("_dlinfo_nid_no_patch");
 static constexpr std::uint32_t PT_NULL = 0;
 static constexpr std::uint32_t PT_DYNAMIC = 2;
 static constexpr std::uint32_t PT_INTERP = 3;
