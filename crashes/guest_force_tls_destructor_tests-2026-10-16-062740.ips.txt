@@ -1,0 +1,182 @@
+{"app_name":"guest_force_tls_destructor_tests","timestamp":"2026-10-16 06:27:40.00 +0000","app_version":"","slice_uuid":"046ce9ca-e184-3b13-bb0c-8a8b59aa7f9b","build_version":"","platform":1,"share_with_app_devs":0,"is_first_party":1,"bug_type":"309","os_version":"macOS 15.7.9 (24G830)","roots_installed":0,"incident_id":"643EDB11-340F-4AFD-A404-291EDE77A7E6","name":"guest_force_tls_destructor_tests"}
+{
+  "uptime" : 2600,
+  "procRole" : "Unspecified",
+  "version" : 2,
+  "userID" : 501,
+  "deployVersion" : 210,
+  "modelCode" : "VirtualMac2,1",
+  "coalitionID" : 805,
+  "osVersion" : {
+    "train" : "macOS 15.7.9",
+    "build" : "24G830",
+    "releaseType" : "User"
+  },
+  "captureTime" : "2026-10-16 06:27:40.7854 +0000",
+  "codeSigningMonitor" : 0,
+  "incident" : "643EDB11-340F-4AFD-A404-291EDE77A7E6",
+  "pid" : 88725,
+  "translated" : true,
+  "cpuType" : "X86-64",
+  "roots_installed" : 0,
+  "bug_type" : "309",
+  "procLaunch" : "2026-10-16 06:27:40.6668 +0000",
+  "procStartAbsTime" : 62502789819,
+  "procExitAbsTime" : 62505624577,
+  "procName" : "guest_force_tls_destructor_tests",
+  "procPath" : "\/Users\/USER\/*\/guest_force_tls_destructor_tests",
+  "parentProc" : "ctest",
+  "parentPid" : 88329,
+  "coalitionName" : "runner-provisioner",
+  "crashReporterKey" : "ADDE7254-8956-057B-324C-1789E3C481AE",
+  "appleIntelligenceStatus" : {"state":"unavailable","reasons":["selectedSiriLanguageIneligible","deviceNotCapable","countryLocationIneligible","countryBillingIneligible"]},
+  "responsiblePid" : 944,
+  "responsibleProc" : "hosted-compute-agent",
+  "codeSigningID" : "",
+  "codeSigningTeamID" : "",
+  "codeSigningValidationCategory" : 0,
+  "codeSigningTrustLevel" : 4294967295,
+  "codeSigningAuxiliaryInfo" : 0,
+  "bootSessionUUID" : "5DC6999D-4FD6-4842-8BB5-CB7B525F4498",
+  "sip" : "disabled",
+  "exception" : {"codes":"0x0000000000000000, 0x0000000000000000","rawCodes":[0,0],"type":"EXC_CRASH","signal":"SIGABRT"},
+  "termination" : {"flags":0,"code":6,"namespace":"SIGNAL","indicator":"Abort trap: 6","byProc":"guest_force_tls_destructor_tests","byPid":88725},
+  "asi" : {"libsystem_c.dylib":["abort() called"]},
+  "extMods" : {"caller":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"system":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"targeted":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"warnings":0},
+  "faultingThread" : 0,
+  "threads" : [{"triggered":true,"id":217666,"threadState":{"flavor":"x86_THREAD_STATE","rbp":{"value":0},"r12":{"value":13044507688},"rosetta":{"tmp2":{"value":140703232096316},"tmp1":{"value":140705602808500},"tmp0":{"value":18446744073709551615}},"rbx":{"value":140704335493568,"symbolLocation":0,"symbol":"_os_xbs_chrooted"},"r8":{"value":13044505736},"r15":{"value":22},"r10":{"value":140704335493568,"symbolLocation":0,"symbol":"_os_xbs_chrooted"},"rdx":{"value":0},"rdi":{"value":13044507688},"r9":{"value":0},"r13":{"value":8637443296,"symbolLocation":96,"symbol":"lsl::sPoolBytes"},"rflags":{"value":647},"rax":{"value":0},"rsp":{"value":552},"r11":{"value":1},"rcx":{"value":0},"r14":{"value":259},"rsi":{"value":8637575680,"symbolLocation":0,"symbol":"_main_thread"}},"queue":"com.apple.main-thread","frames":[{"imageOffset":140705602808544,"imageIndex":7},{"imageOffset":30790,"symbol":"__pthread_kill","symbolLocation":10,"imageIndex":8},{"imageOffset":23314,"symbol":"pthread_kill","symbolLocation":259,"imageIndex":9},{"imageOffset":525430,"symbol":"abort","symbolLocation":126,"imageIndex":10},{"imageOffset":7168,"sourceFile":"GuestForceTlsDestructor.cpp","symbol":"main","symbolLocation":128,"imageIndex":3},{"imageOffset":25904,"symbol":"start","symbolLocation":3056,"imageIndex":0}]},{"id":217667,"name":"com.apple.rosetta.exceptionserver","threadState":{"flavor":"x86_THREAD_STATE","rbp":{"value":9908489551872},"r12":{"value":0},"rosetta":{"tmp2":{"value":0},"tmp1":{"value":0},"tmp0":{"value":0}},"rbx":{"value":0},"r8":{"value":2307},"r15":{"value":0},"r10":{"value":0},"rdx":{"value":0},"rdi":{"value":0},"r9":{"value":1},"r13":{"value":0},"rflags":{"value":515},"rax":{"value":268451845},"rsp":{"value":0},"r11":{"value":0},"rcx":{"value":17314086914},"r14":{"value":0},"rsi":{"value":2616}},"frames":[{"imageOffset":16612,"imageIndex":1}]}],
+  "usedImages" : [
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 8636768256,
+    "size" : 634880,
+    "uuid" : "ba070062-52cf-31dd-9a27-d3ab5e4401cd",
+    "path" : "\/usr\/lib\/dyld",
+    "name" : "dyld"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 140703127851008,
+    "size" : 196608,
+    "uuid" : "e1f1f05c-bc3d-3c2c-b87c-d85a3f811426",
+    "path" : "\/usr\/libexec\/rosetta\/runtime",
+    "name" : "runtime"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4473798656,
+    "size" : 425984,
+    "uuid" : "7742e99c-2006-3006-bc1e-1869448c6224",
+    "path" : "\/Library\/Apple\/*\/libRosettaRuntime",
+    "name" : "libRosettaRuntime"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4339474432,
+    "size" : 12288,
+    "uuid" : "046ce9ca-e184-3b13-bb0c-8a8b59aa7f9b",
+    "path" : "\/Users\/USER\/*\/guest_force_tls_destructor_tests",
+    "name" : "guest_force_tls_destructor_tests"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4479746048,
+    "size" : 32768,
+    "uuid" : "6940bc3b-ec50-35ac-bb19-2fc588e73baa",
+    "path" : "\/Users\/USER\/*\/libSceLibcInternal.prx",
+    "name" : "libSceLibcInternal.prx"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4480774144,
+    "size" : 544768,
+    "uuid" : "0c48187d-d8d2-320e-b674-a23daa06a67c",
+    "path" : "\/Users\/USER\/*\/libkernel.prx",
+    "name" : "libkernel.prx"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4482703360,
+    "size" : 376832,
+    "uuid" : "b0e12f6a-19bd-3e34-875c-775c5fb3168a",
+    "path" : "\/Users\/USER\/*\/libc.prx",
+    "name" : "libc.prx"
+  },
+  {
+    "size" : 0,
+    "source" : "A",
+    "base" : 0,
+    "uuid" : "00000000-0000-0000-0000-000000000000"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703232065536,
+    "size" : 248608,
+    "uuid" : "7e438d0a-ac23-3ada-bae3-99fb51f2d898",
+    "path" : "\/usr\/lib\/system\/libsystem_kernel.dylib",
+    "name" : "libsystem_kernel.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703232315392,
+    "size" : 49112,
+    "uuid" : "fa0539b0-b910-38ec-9406-18f7fb96ab75",
+    "path" : "\/usr\/lib\/system\/libsystem_pthread.dylib",
+    "name" : "libsystem_pthread.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703230889984,
+    "size" : 559624,
+    "uuid" : "065490dc-bbdb-3311-898d-77232fb7409f",
+    "path" : "\/usr\/lib\/system\/libsystem_c.dylib",
+    "name" : "libsystem_c.dylib"
+  }
+],
+  "sharedCache" : {
+  "base" : 140703200018432,
+  "size" : 25769803776,
+  "uuid" : "601f5d00-6c3b-3e09-b481-2c43b896e9c6"
+},
+  "vmSummary" : "ReadOnly portion of Libraries: Total=169.8M resident=0K(0%) swapped_out_or_unallocated=169.8M(100%)\nWritable regions: Total=872.7M written=369K(0%) resident=369K(0%) swapped_out=0K(0%) unallocated=872.4M(100%)\n\n                                VIRTUAL   REGION \nREGION TYPE                        SIZE    COUNT (non-coalesced) \n===========                     =======  ======= \nKernel Alloc Once                    8K        1 \nMALLOC                           649.1M       12 \nMALLOC guard page                   96K        6 \nRosetta Arena                     4096K        2 \nRosetta Generic                   1240K      307 \nRosetta IndirectBranch              96K        2 \nRosetta JIT                      128.0M        1 \nRosetta Return Stack                20K        2 \nRosetta Thread Context              20K        2 \nStack                             64.0M        1 \nStack Guard                         16K        1 \nVM_ALLOCATE                      583.9G        7 \nVM_ALLOCATE (reserved)               4K        1         reserved VM address space (unallocated)\n__DATA                             433K       49 \n__DATA_CONST                       318K       48 \n__DATA_DIRTY                        65K       24 \n__LINKEDIT                       162.5M       10 \n__OBJC_RO                         61.3M        1 \n__OBJC_RW                         2394K        2 \n__TEXT                            7532K       50 \n__TPRO_CONST                         8K        2 \nmapped file                       1788K       13 \npage table in kernel               369K        1 \nshared memory                       48K        2 \n===========                     =======  ======= \nTOTAL                            585.0G      547 \nTOTAL, minus reserved VM space   585.0G      547 \n",
+  "legacyInfo" : {
+  "threadTriggered" : {
+    "queue" : "com.apple.main-thread"
+  }
+},
+  "logWritingSignature" : "5c6ccafd72d9b71a5b71a4496aab90549a77f0fb",
+  "trialInfo" : {
+  "rollouts" : [
+    {
+      "rolloutId" : "6297d96be2c9387df974efa4",
+      "factorPackIds" : {
+
+      },
+      "deploymentId" : 240000032
+    },
+    {
+      "rolloutId" : "642da32dea3b2418c750f848",
+      "factorPackIds" : {
+
+      },
+      "deploymentId" : 240000011
+    }
+  ],
+  "experiments" : [
+
+  ]
+},
+  "reportNotes" : [
+  "RIP register does not match crashing frame (0x0 vs 0x7FF893792AE0)"
+]
+}

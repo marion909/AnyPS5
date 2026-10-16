@@ -1,0 +1,164 @@
+Test project /Users/runner/work/AnyPS5/AnyPS5/build
+      Start   85: precise_wait
+ 1/26 Test   #85: precise_wait .....................***Failed    0.09 sec
+PreciseSleepUs(50) returned before its requested duration
+
+      Start   93: guest_math
+ 2/26 Test   #93: guest_math .......................Subprocess aborted***Exception:   0.08 sec
+
+      Start  131: exception_runtime
+ 3/26 Test  #131: exception_runtime ................Subprocess aborted***Exception:   0.09 sec
+Assertion failed: (__cxa_uncaught_exceptions_nid_postfix() > 0), function ~Guard, file ExceptionRuntime.cpp, line 40.
+
+      Start  140: application_heap_lazy
+ 4/26 Test  #140: application_heap_lazy ............Subprocess aborted***Exception:   0.11 sec
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  application heap: invalid or missing process parameters
+
+      Start  184: agc_write_tracking
+ 5/26 Test  #184: agc_write_tracking ...............***Failed    0.17 sec
+write tracking test failed: a block the import window did not touch reads as written
+
+      Start  265: agc_shared_write
+ 6/26 Test  #265: agc_shared_write .................***Failed    0.12 sec
+cannot inspect mapping lifetimes
+
+      Start  785: guest_audio3d_port
+ 7/26 Test  #785: guest_audio3d_port ...............Subprocess aborted***Exception:   0.38 sec
+blocking push returns with one free slot
+
+      Start  806: guest_avplayer
+ 8/26 Test  #806: guest_avplayer ...................   Passed    9.90 sec
+      Start  853: guest_force_tls_destructor
+ 9/26 Test  #853: guest_force_tls_destructor .......Subprocess aborted***Exception:   0.12 sec
+
+      Start  864: guest_sce_net
+10/26 Test  #864: guest_sce_net ....................Subprocess aborted***Exception:   0.79 sec
+[src/Open.cpp:215 sceKernelOpen] path=/dev/urandom flags=0x0 nativeFlags=0x0 mode=00
+[SOFT-NET] sceNetResolverStartNtoa -> host DNS lookup failed
+
+      Start  993: guest_module_info
+11/26 Test  #993: guest_module_info ................Subprocess aborted***Exception:   0.10 sec
+
+      Start  995: guest_filesystem
+12/26 Test  #995: guest_filesystem .................Subprocess aborted***Exception:   0.42 sec
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/missing/../present.txt flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/missing/../present.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/missing/../new.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/present.txt/../present.txt flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/present.txt/../present.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/present.txt/../new.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/present.txt/child/../../present.txt flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/present.txt/child/../../present.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/present.txt/child/../../new.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=/anyps5-parent-test-2605388649375/missing/../present.txt flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=/anyps5-parent-test-2605388649375/missing/../present.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=/anyps5-parent-test-2605388649375/missing/../new.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/missing/../../anyps5-parent-test-2605388649375/present.txt flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/missing/../../anyps5-parent-test-2605388649375/present.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/missing/../../anyps5-parent-test-2605388649375/new.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=/PARENT-TEST-MOUNT/missing/../present.txt flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=/PARENT-TEST-MOUNT/missing/../present.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=/PARENT-TEST-MOUNT/missing/../new.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=/parent-test-mount/present.txt/../present.txt flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=/parent-test-mount/present.txt/../present.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=/parent-test-mount/present.txt/../new.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=/parent-test-mount/slash-open/ flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/file-link/../present.txt flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/file-link/../present.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/file-link/../new.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/dangling-link/../present.txt flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/dangling-link/../present.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-parent-test-2605388649375/dangling-link/../new.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=Existing/../new.txt flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-relinked-names-2605502220625/Plugin.prx flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-relinked-names-2605502220625/Plugin.prx flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-relinked-names-2605502220625/Plugin.prx flags=0x601 nativeFlags=0x601 mode=0600
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-relinked-case-2605529000875/libRenoirCore.PS5.prx flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=creat_probe.bin flags=0x601 nativeFlags=0x601 mode=0644
+[src/Open.cpp:215 sceKernelOpen] path=creat_probe.bin flags=0x601 nativeFlags=0x601 mode=0644
+[src/Open.cpp:215 sceKernelOpen] path=. flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=/dev/urandom flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-filesystem-test-2605564997625/held.txt flags=0x2 nativeFlags=0x2 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-filesystem-test-2605564997625/held.txt flags=0xA01 nativeFlags=0xA01 mode=0644
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-filesystem-test-2605564997625/moved.txt flags=0x0 nativeFlags=0x0 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-filesystem-test-2605564997625/libc_rename/occupied.txt flags=0x2 nativeFlags=0x2 mode=00
+[src/Open.cpp:215 sceKernelOpen] path=anyps5-filesystem-test-2605564997625/libc_rename/occupied.txt flags=0x2 nativeFlags=0x2 mode=00
+
+      Start 1018: guest_pthread_stack
+13/26 Test #1018: guest_pthread_stack ..............Subprocess aborted***Exception:   0.11 sec
+[src/Thread.cpp:544 RunThread] RunThread entry=0x100ab88a0 arg=0x3057e0e78 self=0x7fd6bf8045d0
+
+      Start 1023: guest_cpu_time_clocks
+14/26 Test #1023: guest_cpu_time_clocks ............   Passed    9.49 sec
+      Start 1025: guest_thread_cpu_clock
+15/26 Test #1025: guest_thread_cpu_clock ...........Subprocess aborted***Exception:   8.84 sec
+
+      Start 1027: guest_nanosleep
+16/26 Test #1027: guest_nanosleep ..................Subprocess aborted***Exception:   0.21 sec
+
+      Start 1041: guest_itimer
+17/26 Test #1041: guest_itimer .....................***Failed    0.62 sec
+unexpected termination at expiry
+
+      Start 1048: guest_raise_exception
+18/26 Test #1048: guest_raise_exception ............   Passed   11.74 sec
+      Start 1065: guest_shm_open
+19/26 Test #1065: guest_shm_open ...................Subprocess aborted***Exception:   0.07 sec
+
+      Start 1068: guest_system_configuration
+20/26 Test #1068: guest_system_configuration .......Subprocess aborted***Exception:   0.24 sec
+
+      Start 1076: guest_udp
+21/26 Test #1076: guest_udp ........................Subprocess aborted***Exception:   0.09 sec
+
+      Start 1078: guest_poll
+22/26 Test #1078: guest_poll .......................Subprocess aborted***Exception:   1.12 sec
+
+      Start 1082: guest_socket_pair
+23/26 Test #1082: guest_socket_pair ................Subprocess aborted***Exception:   0.08 sec
+
+      Start 1091: guest_memory
+24/26 Test #1091: guest_memory .....................Subprocess aborted***Exception:   0.11 sec
+[memory] configured flexible memory: 0x1c000000 bytes (448 MiB)
+Guest memory check failed at /Users/runner/work/AnyPS5/AnyPS5/core/libs/tests/GuestMemory.cpp:248
+
+      Start 1094: guest_flexible_memory_declared
+25/26 Test #1094: guest_flexible_memory_declared ...Subprocess aborted***Exception:   0.11 sec
+[memory] configured flexible memory: 0x32000000 bytes (800 MiB)
+Flexible memory budget check failed at /Users/runner/work/AnyPS5/AnyPS5/core/libs/tests/GuestFlexibleMemoryBudget.cpp:58
+
+      Start 1100: guest_mlock
+26/26 Test #1100: guest_mlock ......................Subprocess aborted***Exception:   0.09 sec
+[memory] configured flexible memory: 0x1c000000 bytes (448 MiB)
+
+
+12% tests passed, 23 tests failed out of 26
+
+Total Test time (real) =  45.42 sec
+
+The following tests FAILED:
+	 85 - precise_wait (Failed)
+	 93 - guest_math (Subprocess aborted)
+	131 - exception_runtime (Subprocess aborted)
+	140 - application_heap_lazy (Subprocess aborted)
+	184 - agc_write_tracking (Failed)
+	265 - agc_shared_write (Failed)
+	785 - guest_audio3d_port (Subprocess aborted)
+	853 - guest_force_tls_destructor (Subprocess aborted)
+	864 - guest_sce_net (Subprocess aborted)
+	993 - guest_module_info (Subprocess aborted)
+	995 - guest_filesystem (Subprocess aborted)
+	1018 - guest_pthread_stack (Subprocess aborted)
+	1025 - guest_thread_cpu_clock (Subprocess aborted)
+	1027 - guest_nanosleep (Subprocess aborted)
+	1041 - guest_itimer (Failed)
+	1065 - guest_shm_open (Subprocess aborted)
+	1068 - guest_system_configuration (Subprocess aborted)
+	1076 - guest_udp (Subprocess aborted)
+	1078 - guest_poll (Subprocess aborted)
+	1082 - guest_socket_pair (Subprocess aborted)
+	1091 - guest_memory (Subprocess aborted)
+	1094 - guest_flexible_memory_declared (Subprocess aborted)
+	1100 - guest_mlock (Subprocess aborted)
+Errors while running CTest
