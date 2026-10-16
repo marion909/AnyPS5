@@ -275,7 +275,8 @@ IrProgram PrepareResourceProgram(const RecompileRequest& request, ShaderPreparat
     if (stageKind == ShaderStageKind::Pixel && !translateOptions.fragmentShaderBarycentricEnabled && !HostInterpolationChecker{}.Lower(program, *inputInfo.pixel)) {
         translateOptions.fragmentShaderBarycentricEnabled = true;
         program = translator.Translate(decoded, cfg, translateOptions);
-        program.Metadata().barycentricEmulation = true;
+        if (request.target.fragmentBarycentricCoordinatesOnly) program.Metadata().perVertexReconstruction = true;
+        else program.Metadata().barycentricEmulation = true;
         simplify();
     }
 
