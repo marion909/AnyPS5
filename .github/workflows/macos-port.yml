@@ -1,0 +1,126 @@
+name: macOS port
+
+on:
+  push:
+    branches: [macos-pr-ci]
+  workflow_dispatch:
+
+concurrency:
+  group: macos-port-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Rosetta and tools
+        run: |
+          /usr/bin/arch -x86_64 /usr/bin/true || softwareupdate --install-rosetta --agree-to-license
+          brew list ninja >/dev/null 2>&1 || brew install ninja
+          mkdir -p logs
+      - name: Build the relinker
+        run: |
+          cmake -S . -B build-relinker -G Ninja -DCMAKE_BUILD_TYPE=Release -DANYPS5_RELINKER_ONLY=ON > logs/relinker-configure.log 2>&1
+          cmake --build build-relinker --parallel > logs/relinker-build.log 2>&1 || { tail -80 logs/relinker-build.log; exit 1; }
+      - name: Configure the full build
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release > logs/configure.log 2>&1 || { tail -80 logs/configure.log; exit 1; }
+      - name: Build the system libraries
+        run: |
+          set +e
+          cmake --build build --target libs --parallel -- -k 0 > logs/libs.log 2>&1
+          status=$?
+          grep -E 'error:|FAILED:' logs/libs.log | head -200
+          exit $status
+      - name: Smoke test guest start, imports and TLS under Rosetta
+        run: |
+          set -e
+          mkdir -p smoke && cd smoke
+          python3 ../core/relinker/relinker/tests/macos/import_fixture.py import.elf
+          python3 ../core/relinker/relinker/tests/macos/tls_fixture.py tls.elf
+          for name in import tls; do
+            mkdir -p $name
+            ../build-relinker/core/relinker/relinker --macos --skip-sce-module $name.elf $name/app
+            ln -sf "$PWD/../build/core/libs/libs" $name/libs
+          done
+          set +e
+          (cd import && /usr/bin/arch -x86_64 ./app) > ../logs/smoke-import.log 2>&1
+          importStatus=$?
+          (cd tls && /usr/bin/arch -x86_64 ./app) > ../logs/smoke-tls.log 2>&1
+          tlsStatus=$?
+          cat ../logs/smoke-import.log ../logs/smoke-tls.log
+          echo "import exit=$importStatus tls exit=$tlsStatus"
+          grep -q "hello from a PS5 ELF on macOS" ../logs/smoke-import.log && [ $importStatus -eq 0 ] && [ $tlsStatus -eq 136 ]
+      - name: Run the test suite
+        if: always()
+        continue-on-error: true
+        run: |
+          set +e
+          cmake -S . -B build -DBUILD_TESTING=ON -DCMAKE_C_FLAGS=-g -DCMAKE_CXX_FLAGS=-g > logs/tests-configure.log 2>&1
+          cmake --build build --parallel -- -k 0 > logs/tests-build.log 2>&1
+          echo "build exit=$?" >> logs/tests-build.log
+          grep -E 'error:|FAILED:' logs/tests-build.log | head -100
+          ctest --test-dir build --output-on-failure --timeout 120 -j 4 > logs/tests.log 2>&1
+          echo "ctest exit=$?" >> logs/tests.log
+          tail -60 logs/tests.log
+          ctest --test-dir build --rerun-failed --output-on-failure --timeout 120 -j 1 > logs/tests-failed.log 2>&1
+          ls -t ~/Library/Logs/DiagnosticReports 2>/dev/null | head -40 > logs/crash-reports.txt
+          mkdir -p logs/crashes
+          for report in $(ls -t ~/Library/Logs/DiagnosticReports/*.ips 2>/dev/null | head -15); do head -c 400000 "$report" > "logs/crashes/$(basename "$report").txt"; done
+          python3 - ~/Library/Logs/DiagnosticReports/*.ips > logs/crash-summary.txt <<'PY'
+          import json, os, subprocess, sys
+          binaries = {}
+          for root, _, files in os.walk("build"):
+              for file in files:
+                  binaries.setdefault(file, os.path.join(root, file))
+          def resolve(image, frame):
+              binary = binaries.get(image.get("name", ""))
+              if binary is None or "imageOffset" not in frame or "base" not in image:
+                  return ""
+              try:
+                  output = subprocess.run(["atos", "-arch", "x86_64", "-i", "-o", binary, "-l", hex(image["base"]), hex(image["base"] + frame["imageOffset"])], capture_output=True, text=True, timeout=30).stdout
+              except Exception:
+                  return ""
+              return " | ".join(line.strip() for line in output.splitlines() if line.strip())
+          for path in sorted(sys.argv[1:]):
+              try:
+                  text = open(path, errors="replace").read()
+                  report = json.loads(text[text.index("\n") + 1:])
+              except Exception as error:
+                  print("=====", path, "unreadable:", error)
+                  continue
+              print("=====", path.rsplit("/", 1)[-1])
+              print(report.get("exception"), report.get("asi"))
+              images = report.get("usedImages", [])
+              thread = report["threads"][report.get("faultingThread", 0)]
+              for frame in thread.get("frames", [])[:16]:
+                  index = frame.get("imageIndex")
+                  image = images[index] if index is not None and index < len(images) else {}
+                  print("  ", image.get("name", "?"), frame.get("symbol", "?"), frame.get("symbolLocation", ""), frame.get("sourceFile", ""), frame.get("sourceLine", ""), resolve(image, frame))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-logs
+          path: logs/
+      - name: Publish logs to the ci-logs branch
+        if: always()
+        run: |
+          set -e
+          cp -R logs "$RUNNER_TEMP/logs"
+          git config user.name "macos-ci"
+          git config user.email "macos-ci@users.noreply.github.com"
+          git checkout --orphan ci-logs-publish
+          git rm -rq --cached . || true
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R "$RUNNER_TEMP/logs/." .
+          echo "${{ github.sha }}" > COMMIT
+          git add -A
+          git commit -qm "logs for ${{ github.sha }}"
+          git push -f origin HEAD:ci-logs-pr
