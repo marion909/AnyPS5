@@ -44,6 +44,12 @@
 #include <string>
 #include <thread>
 #include <vector>
+#if defined(__APPLE__) && !defined(MSG_NOSIGNAL)
+#define MSG_NOSIGNAL 0
+#endif
+#if defined(__APPLE__) && !defined(POLLRDHUP)
+#define POLLRDHUP 0
+#endif
 
 extern "C" int* APS5_VABI __error_nid_postfix();
 namespace {
@@ -364,6 +370,11 @@ bool GuestSockets::WaitAny(const std::vector<Interest>& interests, std::uint64_t
     }
     if (WSAPoll(entries.data(), static_cast<ULONG>(entries.size()), timeout) == SOCKET_ERROR)
         throw std::runtime_error("equeue wait: WSAPoll failed, guest errno " + std::to_string(NativeError()));
+#elif defined(__APPLE__)
+    int timeout = -1;
+    if (deadlineNanos != 0) timeout = static_cast<int>(std::min<std::uint64_t>((remaining + 999999) / 1000000, INT_MAX));
+    if (::poll(entries.data(), static_cast<nfds_t>(entries.size()), timeout) < 0 && errno != EINTR)
+        throw std::runtime_error("equeue wait: poll failed, guest errno " + std::to_string(NativeError()));
 #else
     timespec timeout{static_cast<time_t>(remaining / 1000000000), static_cast<long>(remaining % 1000000000)};
     if (::ppoll(entries.data(), entries.size(), deadlineNanos != 0 ? &timeout : nullptr, nullptr) < 0 && errno != EINTR)
