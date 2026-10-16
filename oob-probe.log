@@ -1,0 +1,7 @@
+before: poll 1 revents 0x4; oob peek -1 errno 22 byte 0; atmark 0; fionread 0
+after send: poll 1 revents 0x4; oob peek 1 errno 0 byte 117; atmark 0; fionread 0
+again: poll 1 revents 0x4; oob peek -1 errno 22 byte 0; atmark 0; fionread 0
+pollpri only: 0 revents 0x0
+third: poll 1 revents 0x4; oob peek -1 errno 22 byte 0; atmark 0; fionread 0
+normal peek -1 errno 35
+after normal peek: poll 1 revents 0x4; oob peek -1 errno 22 byte 0; atmark 0; fionread 0

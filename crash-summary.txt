@@ -1,0 +1,86 @@
+===== exception_runtime_tests-2026-10-16-214231.000.ips
+{'codes': '0x0000000000000000, 0x0000000000000000', 'rawCodes': [0, 0], 'type': 'EXC_CRASH', 'signal': 'SIGABRT'} {'libsystem_c.dylib': ['crashed on child side of fork pre-exec']}
+   ? ?    
+   libsystem_kernel.dylib __pthread_kill 10   
+   libsystem_pthread.dylib pthread_kill 259   
+   libsystem_c.dylib abort 126   
+   libc.prx LibcException::DefaultTerminate() 460 Runtime.cpp 85 LibcException::DefaultTerminate() (in libc.prx) (Runtime.cpp:85)
+   libc.prx LibcException::InvokeTerminate(void (*)()) 11 Runtime.cpp 90 LibcException::InvokeTerminate(void (*)()) (in libc.prx) (Runtime.cpp:90)
+   libc.prx ThrowFromSite(void*, std::type_info*, void (*)(void*), void*) 148 Runtime.cpp 297 ThrowFromSite(void*, std::type_info*, void (*)(void*), void*) (in libc.prx) (Runtime.cpp:297)
+   libc.prx __cxa_throw_nid_postfix 13 Runtime.cpp 301 __cxa_throw_nid_postfix (in libc.prx) (Runtime.cpp:301)
+   libc.prx LibcException::ThrowMessage(LibcException::ExceptionVtable const&, char const*) 62 StandardExceptions.cpp 120 LibcException::ThrowMessage(LibcException::ExceptionVtable const&, char const*) (in libc.prx) (StandardExceptions.cpp:120)
+   libc.prx _ZSt14_Xout_of_rangePKc_nid_postfix 19 StandardExceptions.cpp 459 _ZSt14_Xout_of_rangePKc_nid_postfix (in libc.prx) (StandardExceptions.cpp:459)
+   exception_runtime_tests CheckGuestTerminateMessage() 1266 ExceptionRuntime.cpp 429 CheckGuestTerminateMessage() (in exception_runtime_tests) (ExceptionRuntime.cpp:429)
+   exception_runtime_tests main.cold.4 88 ExceptionRuntime.cpp 516 main.cold.4 (in exception_runtime_tests) (ExceptionRuntime.cpp:516)
+   exception_runtime_tests main 286 ExceptionRuntime.cpp 503 main (in exception_runtime_tests) (ExceptionRuntime.cpp:503)
+   dyld start 3056   
+===== exception_runtime_tests-2026-10-16-214231.ips
+{'codes': '0x0000000000000000, 0x0000000000000000', 'rawCodes': [0, 0], 'type': 'EXC_CRASH', 'signal': 'SIGABRT'} {'libsystem_c.dylib': ['crashed on child side of fork pre-exec']}
+   ? ?    
+   libsystem_kernel.dylib __pthread_kill 10   
+   libsystem_pthread.dylib pthread_kill 259   
+   libsystem_c.dylib abort 126   
+   libc.prx LibcException::HostTerminate() 79 Runtime.cpp 115 LibcException::HostTerminate() (in libc.prx) (Runtime.cpp:115)
+   libc++abi.dylib std::__terminate(void (*)()) 6   
+   libc++abi.dylib __cxxabiv1::failed_throw(__cxxabiv1::__cxa_exception*) 27   
+   libc++abi.dylib __cxa_throw 69   
+   exception_runtime_tests CheckDefaultTerminateMessage() 1273 ExceptionRuntime.cpp 241 CheckDefaultTerminateMessage() (in exception_runtime_tests) (ExceptionRuntime.cpp:241)
+   exception_runtime_tests main.cold.4 83 ExceptionRuntime.cpp 515 main.cold.4 (in exception_runtime_tests) (ExceptionRuntime.cpp:515)
+   exception_runtime_tests main 286 ExceptionRuntime.cpp 503 main (in exception_runtime_tests) (ExceptionRuntime.cpp:503)
+   dyld start 3056   
+===== guest_audio3d_port_tests-2026-10-16-214348.ips
+{'codes': '0x0000000000000000, 0x0000000000000000', 'rawCodes': [0, 0], 'type': 'EXC_CRASH', 'signal': 'SIGABRT'} {'libsystem_c.dylib': ['abort() called']}
+   ? ?    
+   libsystem_kernel.dylib __pthread_kill 10   
+   libsystem_pthread.dylib pthread_kill 259   
+   libsystem_c.dylib abort 126   
+   guest_audio3d_port_tests (anonymous namespace)::Require(bool, char const*) 36 GuestAudio3dPort.cpp 38 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:38) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main.cold.85 (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) 36 GuestAudio3dPort.cpp 66 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:38) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main.cold.85 (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests (anonymous namespace)::CheckQueue() 36 GuestAudio3dPort.cpp 204 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:38) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main.cold.85 (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests main.cold.85 40 GuestAudio3dPort.cpp 275 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:38) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main.cold.85 (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests (anonymous namespace)::Require(bool, char const*) 5 GuestAudio3dPort.cpp 37 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:37) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) 10 GuestAudio3dPort.cpp 66 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:37) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests (anonymous namespace)::CheckQueue() 20 GuestAudio3dPort.cpp 204 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:37) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests main 4937 GuestAudio3dPort.cpp 275 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:37) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   dyld start 3056   
+===== guest_audio3d_port_tests-2026-10-16-214517.ips
+{'codes': '0x0000000000000000, 0x0000000000000000', 'rawCodes': [0, 0], 'type': 'EXC_CRASH', 'signal': 'SIGABRT'} {'libsystem_c.dylib': ['abort() called']}
+   ? ?    
+   libsystem_kernel.dylib __pthread_kill 10   
+   libsystem_pthread.dylib pthread_kill 259   
+   libsystem_c.dylib abort 126   
+   guest_audio3d_port_tests (anonymous namespace)::Require(bool, char const*) 36 GuestAudio3dPort.cpp 38 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:38) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main.cold.85 (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) 36 GuestAudio3dPort.cpp 66 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:38) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main.cold.85 (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests (anonymous namespace)::CheckQueue() 36 GuestAudio3dPort.cpp 204 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:38) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main.cold.85 (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests main.cold.85 40 GuestAudio3dPort.cpp 275 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:38) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main.cold.85 (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests (anonymous namespace)::Require(bool, char const*) 5 GuestAudio3dPort.cpp 37 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:37) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) 10 GuestAudio3dPort.cpp 66 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:37) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests (anonymous namespace)::CheckQueue() 20 GuestAudio3dPort.cpp 204 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:37) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   guest_audio3d_port_tests main 4937 GuestAudio3dPort.cpp 275 (anonymous namespace)::Require(bool, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:37) | (anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*) (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:66) | (anonymous namespace)::CheckQueue() (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:204) | main (in guest_audio3d_port_tests) (GuestAudio3dPort.cpp:275)
+   dyld start 3056   
+===== guest_host_standard_error_tests-2026-10-16-214416.000.ips
+{'codes': '0x0000000000000000, 0x0000000000000000', 'rawCodes': [0, 0], 'type': 'EXC_CRASH', 'signal': 'SIGABRT'} {'libsystem_c.dylib': ['crashed on child side of fork pre-exec']}
+   ? ?    
+   libsystem_kernel.dylib __pthread_kill 10   
+   libsystem_pthread.dylib pthread_kill 259   
+   libsystem_c.dylib abort 126   
+   libc.prx LibcException::HostTerminate() 79 Runtime.cpp 115 LibcException::HostTerminate() (in libc.prx) (Runtime.cpp:115)
+   libc++abi.dylib std::__terminate(void (*)()) 6   
+   libc++abi.dylib __cxxabiv1::failed_throw(__cxxabiv1::__cxa_exception*) 27   
+   libc++abi.dylib __cxa_throw 69   
+   guest_host_standard_error_tests Run(Redirect, std::__1::__fs::filesystem::path const&, bool) 366 GuestHostStandardError.cpp 59 Run(Redirect, std::__1::__fs::filesystem::path const&, bool) (in guest_host_standard_error_tests) (GuestHostStandardError.cpp:59)
+   guest_host_standard_error_tests main 532 GuestHostStandardError.cpp 85 main (in guest_host_standard_error_tests) (GuestHostStandardError.cpp:85)
+   dyld start 3056   
+===== guest_host_standard_error_tests-2026-10-16-214416.ips
+{'codes': '0x0000000000000000, 0x0000000000000000', 'rawCodes': [0, 0], 'type': 'EXC_CRASH', 'signal': 'SIGABRT'} {'libsystem_c.dylib': ['crashed on child side of fork pre-exec']}
+   ? ?    
+   libsystem_kernel.dylib __pthread_kill 10   
+   libsystem_pthread.dylib pthread_kill 259   
+   libsystem_c.dylib abort 126   
+   libc.prx LibcException::HostTerminate() 79 Runtime.cpp 115 LibcException::HostTerminate() (in libc.prx) (Runtime.cpp:115)
+   libc++abi.dylib std::__terminate(void (*)()) 6   
+   libc++abi.dylib __cxxabiv1::failed_throw(__cxxabiv1::__cxa_exception*) 27   
+   libc++abi.dylib __cxa_throw 69   
+   guest_host_standard_error_tests Run(Redirect, std::__1::__fs::filesystem::path const&, bool) 366 GuestHostStandardError.cpp 59 Run(Redirect, std::__1::__fs::filesystem::path const&, bool) (in guest_host_standard_error_tests) (GuestHostStandardError.cpp:59)
+   guest_host_standard_error_tests main 532 GuestHostStandardError.cpp 85 main (in guest_host_standard_error_tests) (GuestHostStandardError.cpp:85)
+   dyld start 3056   

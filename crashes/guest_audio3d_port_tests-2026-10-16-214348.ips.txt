@@ -1,0 +1,182 @@
+{"app_name":"guest_audio3d_port_tests","timestamp":"2026-10-16 21:43:48.00 +0000","app_version":"","slice_uuid":"dd34fea3-e204-3433-a983-8a5c21790e9a","build_version":"","platform":1,"share_with_app_devs":0,"is_first_party":1,"bug_type":"309","os_version":"macOS 15.7.9 (24G830)","roots_installed":0,"incident_id":"5A817C2C-EDB3-4596-8420-1D84E9F14D1F","name":"guest_audio3d_port_tests"}
+{
+  "uptime" : 1700,
+  "procRole" : "Unspecified",
+  "version" : 2,
+  "userID" : 501,
+  "deployVersion" : 210,
+  "modelCode" : "VirtualMac2,1",
+  "coalitionID" : 824,
+  "osVersion" : {
+    "train" : "macOS 15.7.9",
+    "build" : "24G830",
+    "releaseType" : "User"
+  },
+  "captureTime" : "2026-10-16 21:43:47.8347 +0000",
+  "codeSigningMonitor" : 0,
+  "incident" : "5A817C2C-EDB3-4596-8420-1D84E9F14D1F",
+  "pid" : 62602,
+  "translated" : true,
+  "cpuType" : "X86-64",
+  "roots_installed" : 0,
+  "bug_type" : "309",
+  "procLaunch" : "2026-10-16 21:43:47.2886 +0000",
+  "procStartAbsTime" : 42308724029,
+  "procExitAbsTime" : 42321813927,
+  "procName" : "guest_audio3d_port_tests",
+  "procPath" : "\/Users\/USER\/*\/guest_audio3d_port_tests",
+  "parentProc" : "ctest",
+  "parentPid" : 56567,
+  "coalitionName" : "runner-provisioner",
+  "crashReporterKey" : "ADDE7254-8956-057B-324C-1789E3C481AE",
+  "appleIntelligenceStatus" : {"state":"unavailable","reasons":["deviceNotCapable","selectedSiriLanguageIneligible","countryBillingIneligible","countryLocationIneligible"]},
+  "responsiblePid" : 962,
+  "responsibleProc" : "hosted-compute-agent",
+  "codeSigningID" : "",
+  "codeSigningTeamID" : "",
+  "codeSigningValidationCategory" : 0,
+  "codeSigningTrustLevel" : 4294967295,
+  "codeSigningAuxiliaryInfo" : 0,
+  "bootSessionUUID" : "A7C4FCE3-DA5A-4FCC-B151-D7C4EFBB2E3B",
+  "sip" : "disabled",
+  "exception" : {"codes":"0x0000000000000000, 0x0000000000000000","rawCodes":[0,0],"type":"EXC_CRASH","signal":"SIGABRT"},
+  "termination" : {"flags":0,"code":6,"namespace":"SIGNAL","indicator":"Abort trap: 6","byProc":"guest_audio3d_port_tests","byPid":62602},
+  "asi" : {"libsystem_c.dylib":["abort() called"]},
+  "extMods" : {"caller":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"system":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"targeted":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"warnings":0},
+  "faultingThread" : 0,
+  "threads" : [{"triggered":true,"id":139049,"threadState":{"flavor":"x86_THREAD_STATE","rbp":{"value":0},"r12":{"value":13116621880},"rosetta":{"tmp2":{"value":140703299008572},"tmp1":{"value":140705669720756},"tmp0":{"value":18446744073709551615}},"rbx":{"value":140704402405824,"symbolLocation":0,"symbol":"_os_xbs_chrooted"},"r8":{"value":13116620184},"r15":{"value":22},"r10":{"value":140704402405824,"symbolLocation":0,"symbol":"_os_xbs_chrooted"},"rdx":{"value":0},"rdi":{"value":13116621880},"r9":{"value":0},"r13":{"value":8672832736,"symbolLocation":96,"symbol":"lsl::sPoolBytes"},"rflags":{"value":647},"rax":{"value":0},"rsp":{"value":140704400264768,"symbolLocation":448,"symbol":"__sFX"},"r11":{"value":0},"rcx":{"value":0},"r14":{"value":259},"rsi":{"value":8672965120,"symbolLocation":0,"symbol":"_main_thread"}},"queue":"com.apple.main-thread","frames":[{"imageOffset":140705669720800,"imageIndex":7},{"imageOffset":30790,"symbol":"__pthread_kill","symbolLocation":10,"imageIndex":8},{"imageOffset":23314,"symbol":"pthread_kill","symbolLocation":259,"imageIndex":9},{"imageOffset":525430,"symbol":"abort","symbolLocation":126,"imageIndex":10},{"symbol":"(anonymous namespace)::Require(bool, char const*)","inline":true,"imageIndex":3,"imageOffset":14808,"symbolLocation":36,"sourceLine":38,"sourceFile":"GuestAudio3dPort.cpp"},{"symbol":"(anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*)","inline":true,"imageIndex":3,"imageOffset":14808,"symbolLocation":36,"sourceLine":66,"sourceFile":"GuestAudio3dPort.cpp"},{"symbol":"(anonymous namespace)::CheckQueue()","inline":true,"imageIndex":3,"imageOffset":14808,"symbolLocation":36,"sourceLine":204,"sourceFile":"GuestAudio3dPort.cpp"},{"imageOffset":14808,"sourceLine":275,"sourceFile":"GuestAudio3dPort.cpp","symbol":"main.cold.85","imageIndex":3,"symbolLocation":40},{"symbol":"(anonymous namespace)::Require(bool, char const*)","inline":true,"imageIndex":3,"imageOffset":10537,"symbolLocation":5,"sourceLine":37,"sourceFile":"GuestAudio3dPort.cpp"},{"symbol":"(anonymous namespace)::RequireLevel(unsigned int, unsigned int, char const*)","inline":true,"imageIndex":3,"imageOffset":10537,"symbolLocation":10,"sourceLine":66,"sourceFile":"GuestAudio3dPort.cpp"},{"symbol":"(anonymous namespace)::CheckQueue()","inline":true,"imageIndex":3,"imageOffset":10537,"symbolLocation":20,"sourceLine":204,"sourceFile":"GuestAudio3dPort.cpp"},{"imageOffset":10537,"sourceLine":275,"sourceFile":"GuestAudio3dPort.cpp","symbol":"main","imageIndex":3,"symbolLocation":4937},{"imageOffset":25904,"symbol":"start","symbolLocation":3056,"imageIndex":0}]},{"id":139058,"name":"com.apple.rosetta.exceptionserver","threadState":{"flavor":"x86_THREAD_STATE","rbp":{"value":34097745362944},"r12":{"value":0},"rosetta":{"tmp2":{"value":0},"tmp1":{"value":0},"tmp0":{"value":0}},"rbx":{"value":0},"r8":{"value":7939},"r15":{"value":0},"r10":{"value":0},"rdx":{"value":0},"rdi":{"value":0},"r9":{"value":1},"r13":{"value":0},"rflags":{"value":515},"rax":{"value":268451845},"rsp":{"value":0},"r11":{"value":0},"rcx":{"value":17314086914},"r14":{"value":0},"rsi":{"value":2616}},"frames":[{"imageOffset":16612,"imageIndex":1}]}],
+  "usedImages" : [
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 8672157696,
+    "size" : 634880,
+    "uuid" : "ba070062-52cf-31dd-9a27-d3ab5e4401cd",
+    "path" : "\/usr\/lib\/dyld",
+    "name" : "dyld"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 140703124828160,
+    "size" : 196608,
+    "uuid" : "e1f1f05c-bc3d-3c2c-b87c-d85a3f811426",
+    "path" : "\/usr\/libexec\/rosetta\/runtime",
+    "name" : "runtime"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4510556160,
+    "size" : 425984,
+    "uuid" : "7742e99c-2006-3006-bc1e-1869448c6224",
+    "path" : "\/Library\/Apple\/*\/libRosettaRuntime",
+    "name" : "libRosettaRuntime"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4376199168,
+    "size" : 20480,
+    "uuid" : "dd34fea3-e204-3433-a983-8a5c21790e9a",
+    "path" : "\/Users\/USER\/*\/guest_audio3d_port_tests",
+    "name" : "guest_audio3d_port_tests"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4516450304,
+    "size" : 20480,
+    "uuid" : "78b9c6a9-c0e9-36a5-bd1a-4963938f15a7",
+    "path" : "\/Users\/USER\/*\/libSceAudio3d.prx",
+    "name" : "libSceAudio3d.prx"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4517216256,
+    "size" : 389120,
+    "uuid" : "06e7c29d-8fca-3784-a9e5-cfd8ac8bb51a",
+    "path" : "\/Users\/USER\/*\/libc.prx",
+    "name" : "libc.prx"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4519555072,
+    "size" : 573440,
+    "uuid" : "4247cbf5-8134-3e48-9c79-2893c3deea77",
+    "path" : "\/Users\/USER\/*\/libkernel.prx",
+    "name" : "libkernel.prx"
+  },
+  {
+    "size" : 0,
+    "source" : "A",
+    "base" : 0,
+    "uuid" : "00000000-0000-0000-0000-000000000000"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703298977792,
+    "size" : 248608,
+    "uuid" : "7e438d0a-ac23-3ada-bae3-99fb51f2d898",
+    "path" : "\/usr\/lib\/system\/libsystem_kernel.dylib",
+    "name" : "libsystem_kernel.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703299227648,
+    "size" : 49112,
+    "uuid" : "fa0539b0-b910-38ec-9406-18f7fb96ab75",
+    "path" : "\/usr\/lib\/system\/libsystem_pthread.dylib",
+    "name" : "libsystem_pthread.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703297802240,
+    "size" : 559624,
+    "uuid" : "065490dc-bbdb-3311-898d-77232fb7409f",
+    "path" : "\/usr\/lib\/system\/libsystem_c.dylib",
+    "name" : "libsystem_c.dylib"
+  }
+],
+  "sharedCache" : {
+  "base" : 140703266930688,
+  "size" : 25769803776,
+  "uuid" : "601f5d00-6c3b-3e09-b481-2c43b896e9c6"
+},
+  "vmSummary" : "ReadOnly portion of Libraries: Total=169.8M resident=0K(0%) swapped_out_or_unallocated=169.8M(100%)\nWritable regions: Total=880.8M written=369K(0%) resident=369K(0%) swapped_out=0K(0%) unallocated=880.4M(100%)\n\n                                VIRTUAL   REGION \nREGION TYPE                        SIZE    COUNT (non-coalesced) \n===========                     =======  ======= \nKernel Alloc Once                    8K        1 \nMALLOC                           657.1M       13 \nMALLOC guard page                   96K        6 \nRosetta Arena                     4096K        2 \nRosetta Generic                   1260K      312 \nRosetta IndirectBranch              96K        2 \nRosetta JIT                      128.0M        1 \nRosetta Return Stack                20K        2 \nRosetta Thread Context              20K        2 \nStack                             64.0M        1 \nStack Guard                         16K        1 \nVM_ALLOCATE                      583.9G        8 \n__DATA                             429K       48 \n__DATA_CONST                       318K       48 \n__DATA_DIRTY                        65K       24 \n__LINKEDIT                       162.5M       10 \n__OBJC_RO                         61.3M        1 \n__OBJC_RW                         2394K        2 \n__TEXT                            7568K       50 \n__TPRO_CONST                         8K        2 \nmapped file                       1844K       13 \npage table in kernel               369K        1 \nshared memory                       48K        2 \n===========                     =======  ======= \nTOTAL                            585.0G      552 \n",
+  "legacyInfo" : {
+  "threadTriggered" : {
+    "queue" : "com.apple.main-thread"
+  }
+},
+  "logWritingSignature" : "4686481776a99eeab9776c8787c754fafafdc19b",
+  "trialInfo" : {
+  "rollouts" : [
+    {
+      "rolloutId" : "6297d96be2c9387df974efa4",
+      "factorPackIds" : {
+
+      },
+      "deploymentId" : 240000032
+    },
+    {
+      "rolloutId" : "642da32dea3b2418c750f848",
+      "factorPackIds" : {
+
+      },
+      "deploymentId" : 240000011
+    }
+  ],
+  "experiments" : [
+
+  ]
+},
+  "reportNotes" : [
+  "RIP register does not match crashing frame (0x0 vs 0x7FF897762AE0)"
+]
+}
